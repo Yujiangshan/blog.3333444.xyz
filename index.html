@@ -16,22 +16,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #faf9f7;
-  --bg2: #f2f0ec;
-  --text: #2c2820;
-  --text2: #6b6358;
-  --text3: #a09890;
-  --border: rgba(44,40,32,0.12);
-  --max-w: 720px;
+  --bg: #faf9f7; --bg2: #f2f0ec; --text: #2c2820;
+  --text2: #6b6358; --text3: #a09890;
+  --border: rgba(44,40,32,0.12); --max-w: 720px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1917;
-    --bg2: #232220;
-    --text: #e8e4dc;
-    --text2: #a09890;
-    --text3: #6b6358;
+    --bg: #1a1917; --bg2: #232220; --text: #e8e4dc;
+    --text2: #a09890; --text3: #6b6358;
     --border: rgba(232,228,220,0.1);
   }
 }
@@ -39,191 +32,59 @@
 html { font-size: 18px; }
 body {
   font-family: 'LXGW WenKai', 'PingFang SC', serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.9;
-  padding: 0 1.5rem;
+  background: var(--bg); color: var(--text);
+  line-height: 1.9; padding: 0 1.5rem;
 }
-
 .wrap { max-width: var(--max-w); margin: 0 auto; padding: 3rem 0; }
-
-/* 导航 */
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 2rem 0 3rem;
-  border-bottom: 0.5px solid var(--border);
-  margin-bottom: 3rem;
-}
-.nav-title {
-  font-family: 'JingHua', serif;
-  font-size: 22px;
-  color: var(--text);
-  text-decoration: none;
-  letter-spacing: 0.2em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
+.nav { display: flex; justify-content: space-between; align-items: baseline;
+  padding: 2rem 0 3rem; border-bottom: 0.5px solid var(--border); margin-bottom: 3rem; }
+.nav-title { font-family: 'JingHua', serif; font-size: 22px; color: var(--text);
+  text-decoration: none; letter-spacing: 0.2em; text-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .nav-links { display: flex; gap: 1.5rem; }
-.nav-links a {
-  font-size: 18px;
-  color: var(--text3);
-  text-decoration: none;
-  letter-spacing: 0.05em;
-}
+.nav-links a { font-size: 18px; color: var(--text3); text-decoration: none; letter-spacing: 0.05em; }
 .nav-links a:hover { color: var(--text2); }
-
-/* 文章列表 */
-.post-item {
-  padding: 1.75rem 0;
-  border-bottom: 0.5px solid var(--border);
-}
+.post-item { padding: 1.75rem 0; border-bottom: 0.5px solid var(--border); }
 .post-item:last-child { border-bottom: none; }
-.post-date {
-  font-size: 18px;
-  color: var(--text3);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.4rem;
-}
-.post-link {
-  font-family: 'JingHua', serif;
-  font-size: 20px;
-  color: var(--text);
-  text-decoration: none;
-  line-height: 1.6;
-  display: block;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
-}
-.post-link:hover { 
-  color: var(--text2); 
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease; /* 让变化过程变顺滑 */
-}
-.post-excerpt {
-  font-size: 18px;
-  color: var(--text2);
-  line-height: 1.8;
-}
+.post-date { font-size: 18px; color: var(--text3); letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.post-link { font-family: 'JingHua', serif; font-size: 20px; color: var(--text);
+  text-decoration: none; line-height: 1.6; display: block; margin-bottom: 0.5rem;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.03); }
+.post-link:hover { color: var(--text2); text-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+.post-excerpt { font-size: 18px; color: var(--text2); line-height: 1.8; }
 .post-tags { margin-top: 0.6rem; display: flex; gap: 6px; flex-wrap: wrap; }
-.tag {
-  font-size: 15px;
-  color: var(--text3);
-  background: var(--bg2);
-  padding: 2px 8px;
-  border-radius: 2px;
-  letter-spacing: 0.03em;
-}
-
-/* 文章页 */
-.article-header { text-align: center; padding: 2rem 0 2.5rem; border-bottom: 0.5px solid var(--border); margin-bottom: 2.5rem; }
-.article-title {
-  font-family: 'JingHua', serif;
-  font-size: 24px;
-  color: var(--text);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-.article-meta {
-  font-size: 15px;
-  color: var(--text3);
-  letter-spacing: 0.08em;
-}
-.cover-img {
-  width: 100%;
-  max-height: 420px;
-  object-fit: cover;
-  border-radius: 2px;
-  margin-bottom: 2.5rem;
-  opacity: 0.92;
-}
+.tag { font-size: 15px; color: var(--text3); background: var(--bg2);
+  padding: 2px 8px; border-radius: 2px; letter-spacing: 0.03em; }
+.article-header { text-align: center; padding: 2rem 0 2.5rem;
+  border-bottom: 0.5px solid var(--border); margin-bottom: 2.5rem; }
+.article-title { font-family: 'JingHua', serif; font-size: 24px;
+  color: var(--text); line-height: 1.6; margin-bottom: 1rem; }
+.article-meta { font-size: 15px; color: var(--text3); letter-spacing: 0.08em; }
+.cover-img { width: 100%; max-height: 420px; object-fit: cover;
+  border-radius: 2px; margin-bottom: 2.5rem; opacity: 0.92; }
 .article-body { font-size: 18px; line-height: 1.95; }
-.article-body h2 {
-  font-family: 'JingHua', serif;
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--text2);
-  margin: 2rem 0 1rem;
-  letter-spacing: 0.05em;
-}
+.article-body h2 { font-family: 'JingHua', serif; font-size: 24px;
+  font-weight: 400; color: var(--text2); margin: 2rem 0 1rem; letter-spacing: 0.05em; }
 .article-body p { margin-bottom: 1.3rem; }
-.article-body blockquote {
-  border-left: 2px solid var(--border);
-  padding-left: 1rem;
-  color: var(--text2);
-  margin: 1.5rem 0;
-}
-
-/* 英文区块 */
-.en-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 0.5px solid var(--border);
-  font-family: Georgia, serif;
-  color: var(--text2);
-}
-.en-section h2 {
-  font-size: 24px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-  color: var(--text3);
-}
+.article-body blockquote { border-left: 2px solid var(--border);
+  padding-left: 1rem; color: var(--text2); margin: 1.5rem 0; }
+.en-section { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border);
+  font-family: Georgia, serif; color: var(--text2); }
+.en-section h2 { font-size: 24px; font-weight: 400; letter-spacing: 0.05em;
+  margin-bottom: 1rem; color: var(--text3); }
 .en-section p { font-size: 18px; line-height: 1.9; margin-bottom: 1rem; }
-
-/* 页脚 */
-.article-footer {
-  text-align: center;
-  padding: 3rem 0 2rem;
-  font-size: 15px;
-  color: var(--text3);
-  letter-spacing: 0.2em;
-}
-.back-link {
-  display: inline-block;
-  margin-top: 2rem;
-  font-size: 15px;
-  color: var(--text3);
-  text-decoration: none;
-  letter-spacing: 0.05em;
-}
+.article-footer { text-align: center; padding: 3rem 0 2rem;
+  font-size: 15px; color: var(--text3); letter-spacing: 0.2em; }
+.back-link { display: inline-block; margin-top: 2rem; font-size: 15px;
+  color: var(--text3); text-decoration: none; letter-spacing: 0.05em; }
 .back-link:hover { color: var(--text2); }
-
-/* 分隔 */
-.divider {
-  text-align: center;
-  color: var(--text3);
-  font-size: 14px;
-  padding: 2rem 0 1rem;
-  letter-spacing: 0.3em;
-}
-
-/* 评论区 */
-.comments {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 0.5px solid var(--border);
-}
-
-/* 分享栏 */
-.share-bar {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 0.5px solid var(--border);
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.share-link {
-  font-size: 12px;
-  color: var(--text3);
-  text-decoration: none;
-  padding: 4px 12px;
-  border: 0.5px solid var(--border);
-  border-radius: 2px;
-  letter-spacing: 0.05em;
-  transition: color 0.2s;
-}
+.divider { text-align: center; color: var(--text3); font-size: 14px;
+  padding: 2rem 0 1rem; letter-spacing: 0.3em; }
+.comments { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border); }
+.share-bar { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border);
+  display: flex; gap: 1rem; flex-wrap: wrap; }
+.share-link { font-size: 12px; color: var(--text3); text-decoration: none;
+  padding: 4px 12px; border: 0.5px solid var(--border); border-radius: 2px;
+  letter-spacing: 0.05em; transition: color 0.2s; }
 .share-link:hover { color: var(--text2); }
 </style>
 </head>
@@ -237,6 +98,12 @@ body {
   </div>
 </nav>
   <main>
+<div class="post-item">
+  <div class="post-date">2026 · 03 · 25</div>
+  <a class="post-link" href="/posts/2026-03-25-The-Wisdom-of-Form-and-Emptiness.html">The Wisdom of Form and Emptiness ✨</a>
+  <div class="post-excerpt">The Heart Sutra teaches that "Form is not different from Emptiness." This profound truth is a guide ...</div>
+  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">心经修行</span><span class="tag">禅意生活</span><span class="tag">色空不二</span></div>
+</div>
 <div class="post-item">
   <div class="post-date">2026 · 03 · 25</div>
   <a class="post-link" href="/posts/2026-03-25-Five-Eyes-From-Perception-to-Ultimate-Aw.html">Five Eyes: From Perception to Ultimate Awakening 👁️</a>
