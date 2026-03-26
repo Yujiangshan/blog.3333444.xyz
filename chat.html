@@ -387,7 +387,7 @@ async function send() {
   addMsg("user", esc(q));
 
   // ── 加载提示（纯文字，不依赖 CSS 伪元素）──
-  const aiDiv = addMsg("ai", '<span class="loading-dots">正在检索笔记，请稍候</span>');
+  const aiDiv = addMsg("ai", '<span class="loading-dots">正在查找文献，请稍候</span>');
   const bubble = aiDiv.querySelector(".bubble");
 
   try {
@@ -419,6 +419,7 @@ async function send() {
     const decoder = new TextDecoder();
     let full = "";
     let firstChunk = true;
+    let graphUrl = "";
 
     while (true) {
       const { done, value } = await reader.read();
@@ -431,6 +432,11 @@ async function send() {
         if (payload === "[DONE]") continue;
         try {
           const obj = JSON.parse(payload);
+          // 接收图谱 URL（meta 事件）
+          if (obj.meta && obj.meta.graph_url) {
+            graphUrl = obj.meta.graph_url;
+            continue;
+          }
           if (obj.error) {
             bubble.innerHTML += '<p style="color:var(--text3)">⚠️ ' + obj.error + '</p>';
             continue;
@@ -438,7 +444,7 @@ async function send() {
           const delta = obj.choices && obj.choices[0] && obj.choices[0].delta && obj.choices[0].delta.content;
           if (delta) {
             if (firstChunk) {
-              bubble.innerHTML = "";  // 清掉"正在检索"
+              bubble.innerHTML = "";
               firstChunk = false;
             }
             full += delta;
@@ -450,7 +456,17 @@ async function send() {
       }
     }
 
-    if (full) bubble.innerHTML = marked.parse(full);
+    if (full) {
+      let html = marked.parse(full);
+      // 在回答末尾追加图谱
+      if (graphUrl) {
+        html += '<div style="margin-top:1rem;border-top:0.5px solid var(--border);padding-top:1rem">'
+          + '<img src="' + graphUrl + '" alt="义理关系图" style="width:100%;border-radius:8px;cursor:pointer" '
+          + 'onclick="window.open(this.src)" loading="lazy">'
+          + '<p style="font-size:12px;color:var(--text3);margin-top:0.3rem;text-align:center">义理关系图（点击放大）</p></div>';
+      }
+      bubble.innerHTML = html;
+    }
     if (!full && firstChunk) bubble.innerHTML = '<p style="color:var(--text3)">未收到回答，请重试</p>';
 
   } catch(err) {
