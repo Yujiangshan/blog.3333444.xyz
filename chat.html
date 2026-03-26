@@ -453,6 +453,15 @@ async function send() {
     }
     if (!full && firstChunk) bubble.innerHTML = '<p style="color:var(--text3)">未收到回答，请重试</p>';
 
+    // 成功回答后，异步写入 QA 向量库（不阻塞 UI）
+    if (full) {
+      fetch(API_URL + "/index/qa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, answer: full.slice(0, 1500), source: "chat" }),
+      }).catch(function(){});
+    }
+
   } catch(err) {
     bubble.innerHTML = '<p style="color:var(--text3)">连接失败，请稍后重试</p>';
   }
