@@ -2,313 +2,482 @@
 <html lang="zh-Hans">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>寂照 · 与经典同行于尘世</title>
-<meta name="description" content="寂照 — 基于大德与佛教开示的问答">
-<meta name="google-site-verification" content="_0eh42hMT8-LZn01ci9uNcAImC9Wk_3EZuG3flL6Udo" />
-<style>@font-face {
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>问答 · 寂照</title>
+<meta name="description" content="寂照 — 佛法修行问答，基于佛法经典与大德开示的智能问答">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://media.3333444.xyz" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css"></noscript>
+<script>
+const API_URL = "https://api.3333444.xyz";
+</script>
+<style>
+@font-face {
   font-family: 'JingHua';
   src: url('https://media.3333444.xyz/fonts/JingHuaOldSong.ttf') format('truetype');
   font-display: swap;
 }
-@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #faf9f7; --bg2: #f2f0ec; --text: #2c2820;
-  --text2: #6b6358; --text3: #a09890;
-  --border: rgba(44,40,32,0.12); --max-w: 720px;
+  --bg: #faf9f7;
+  --bg2: #f2f0ec;
+  --bg3: #e8e5df;
+  --text: #2c2820;
+  --text2: #6b6358;
+  --text3: #a09890;
+  --border: rgba(44,40,32,0.12);
+  --accent: #8b7355;
+  --max-w: 720px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1917; --bg2: #232220; --text: #e8e4dc;
-    --text2: #a09890; --text3: #6b6358;
+    --bg: #1a1917;
+    --bg2: #232220;
+    --bg3: #2d2c28;
+    --text: #e8e4dc;
+    --text2: #a09890;
+    --text3: #6b6358;
     --border: rgba(232,228,220,0.1);
+    --accent: #c4a878;
   }
 }
 
-html { font-size: 18px; }
+html { font-size: 16px; }
 body {
-  font-family: 'LXGW WenKai', 'PingFang SC', serif;
-  background: var(--bg); color: var(--text);
-  line-height: 1.9; padding: 0 1.5rem;
+  font-family: 'LXGW WenKai', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
-.wrap { max-width: var(--max-w); margin: 0 auto; padding: 3rem 0; }
-.nav { display: flex; justify-content: space-between; align-items: baseline;
-  padding: 2rem 0 3rem; border-bottom: 0.5px solid var(--border); margin-bottom: 3rem; }
-.nav-title { font-family: 'JingHua', serif; font-size: 22px; color: var(--text);
-  text-decoration: none; letter-spacing: 0.2em; text-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-.nav-links { display: flex; gap: 1.5rem; }
-.nav-links a { font-size: 18px; color: var(--text3); text-decoration: none; letter-spacing: 0.05em; }
+
+.nav {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.nav-title {
+  font-family: 'JingHua', serif;
+  font-size: 22px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.2em;
+}
+.nav-links { display: flex; gap: 1.2rem; }
+.nav-links a {
+  font-size: 15px;
+  color: var(--text3);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
 .nav-links a:hover { color: var(--text2); }
-.post-item { padding: 1.75rem 0; border-bottom: 0.5px solid var(--border); }
-.post-item:last-child { border-bottom: none; }
-.post-date { font-size: 18px; color: var(--text3); letter-spacing: 0.08em; margin-bottom: 0.4rem; }
-.post-link { font-family: 'JingHua', serif; font-size: 20px; color: var(--text);
-  text-decoration: none; line-height: 1.6; display: block; margin-bottom: 0.5rem;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.03); }
-.post-link:hover { color: var(--text2); text-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease; }
-.post-excerpt { font-size: 18px; color: var(--text2); line-height: 1.8; }
-.post-tags { margin-top: 0.6rem; display: flex; gap: 6px; flex-wrap: wrap; }
-.tag { font-size: 15px; color: var(--text3); background: var(--bg2);
-  padding: 2px 8px; border-radius: 2px; letter-spacing: 0.03em; }
-.article-header { text-align: center; padding: 2rem 0 2.5rem;
-  border-bottom: 0.5px solid var(--border); margin-bottom: 2.5rem; }
-.article-title { font-family: 'JingHua', serif; font-size: 24px;
-  color: var(--text); line-height: 1.6; margin-bottom: 1rem; }
-.article-meta { font-size: 15px; color: var(--text3); letter-spacing: 0.08em; }
-.cover-img { width: 100%; max-height: 420px; object-fit: cover;
-  border-radius: 2px; margin-bottom: 2.5rem; opacity: 0.92; }
-.article-body { font-size: 18px; line-height: 1.95; }
-.article-body h2 { font-family: 'JingHua', serif; font-size: 24px;
-  font-weight: 400; color: var(--text2); margin: 2rem 0 1rem; letter-spacing: 0.05em; }
-.article-body p { margin-bottom: 1.3rem; }
-.article-body blockquote { border-left: 2px solid var(--border);
-  padding-left: 1rem; color: var(--text2); margin: 1.5rem 0; }
-.en-section { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border);
-  font-family: Georgia, serif; color: var(--text2); }
-.en-section h2 { font-size: 24px; font-weight: 400; letter-spacing: 0.05em;
-  margin-bottom: 1rem; color: var(--text3); }
-.en-section p { font-size: 18px; line-height: 1.9; margin-bottom: 1rem; }
-.article-footer { text-align: center; padding: 3rem 0 2rem;
-  font-size: 15px; color: var(--text3); letter-spacing: 0.2em; }
-.back-link { display: inline-block; margin-top: 2rem; font-size: 15px;
-  color: var(--text3); text-decoration: none; letter-spacing: 0.05em; }
-.back-link:hover { color: var(--text2); }
-.divider { text-align: center; color: var(--text3); font-size: 14px;
-  padding: 2rem 0 1rem; letter-spacing: 0.3em; }
-.comments { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border); }
-.share-bar { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border);
-  display: flex; gap: 1rem; flex-wrap: wrap; }
-.share-link { font-size: 12px; color: var(--text3); text-decoration: none;
-  padding: 4px 12px; border: 0.5px solid var(--border); border-radius: 2px;
-  letter-spacing: 0.05em; transition: color 0.2s; }
-.share-link:hover { color: var(--text2); }
+.nav-links a.active { color: var(--accent); }
+
+.main {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.welcome {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  color: var(--text3);
+  font-size: 14px;
+  line-height: 2;
+}
+.welcome-icon {
+  font-family: 'JingHua', serif;
+  font-size: 28px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.msg { margin-bottom: 1.5rem; }
+.msg-user { text-align: right; }
+.msg-user .bubble {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 16px 16px 4px 16px;
+  max-width: 80%;
+  text-align: left;
+  font-size: 15px;
+}
+
+.msg-ai .bubble {
+  background: var(--bg2);
+  padding: 1.2rem 1.5rem;
+  border-radius: 4px 16px 16px 16px;
+  border: 0.5px solid var(--border);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* 加载动画 */
+.loading-dots {
+  color: var(--text3);
+  font-size: 14px;
+}
+.loading-dots::after {
+  content: '';
+  display: inline-block;
+  animation: ldots 1.5s steps(4) infinite;
+}
+@keyframes ldots {
+  0%  { content: ''; }
+  25% { content: ' ·'; }
+  50% { content: ' · ·'; }
+  75% { content: ' · · ·'; }
+}
+
+/* Markdown 排版 */
+.msg-ai .bubble h3 {
+  font-family: 'JingHua', serif;
+  font-size: 16px;
+  color: var(--accent);
+  margin: 1.4rem 0 0.5rem;
+  letter-spacing: 0.05em;
+  padding-bottom: 0.3rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.msg-ai .bubble h3:first-child { margin-top: 0; }
+.msg-ai .bubble p { margin: 0.5rem 0; }
+.msg-ai .bubble blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 0.3rem 0 0.3rem 0.8rem;
+  margin: 0.8rem 0;
+  color: var(--text2);
+  font-size: 14px;
+  background: var(--bg);
+  border-radius: 0 8px 8px 0;
+}
+.msg-ai .bubble a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--accent);
+  word-break: break-all;
+}
+.msg-ai .bubble strong { color: var(--accent); }
+.msg-ai .bubble ul, .msg-ai .bubble ol {
+  padding-left: 1.2rem;
+  margin: 0.4rem 0;
+}
+.msg-ai .bubble li { margin: 0.2rem 0; }
+.msg-ai .bubble hr {
+  border: none;
+  border-top: 0.5px solid var(--border);
+  margin: 1rem 0;
+}
+
+.input-area {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 0.5px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  bottom: 0;
+}
+.input-row {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-end;
+}
+.input-row textarea {
+  flex: 1;
+  font-family: 'LXGW WenKai', serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  resize: none;
+  min-height: 42px;
+  max-height: 120px;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-row textarea:focus { border-color: var(--accent); }
+.input-row textarea::placeholder { color: var(--text3); }
+.input-row button {
+  font-family: 'LXGW WenKai', serif;
+  font-size: 14px;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.input-row button:hover { opacity: 0.85; }
+.input-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+.input-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  color: var(--text3);
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.examples button {
+  font-family: 'LXGW WenKai', serif;
+  font-size: 13px;
+  color: var(--text2);
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.examples button:hover { background: var(--bg3); color: var(--text); }
+
+@media (max-width: 600px) {
+  .nav { padding: 1.2rem 1rem 1rem; }
+  .main { padding: 0 1rem; }
+  .input-area { padding: 0.8rem 1rem 1rem; }
+  .msg-ai .bubble { padding: 1rem; }
+  .welcome { padding: 2rem 0 1.5rem; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav class="nav">
+
+<nav class="nav">
   <a href="/" class="nav-title">寂照</a>
   <div class="nav-links">
     <a href="/">文章</a>
-    <a href="/chat.html">问答</a>
+    <a href="/chat.html" class="active">问答</a>
     <a href="/about.html">关于</a>
   </div>
 </nav>
-  <main>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Turning-Illness-into-the-Path-of-Awakeni.html">🌿 Turning Illness into the Path of Awakening</a>
-  <div class="post-excerpt">Illness and aging are unavoidable, yet they offer the most profound opportunities for spiritual grow...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">智慧人生</span><span class="tag">佛法修行</span><span class="tag">心理健康</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Death-of-the-Seeking-Mind-The-Path-to-St.html">Death of the Seeking Mind: The Path to Stillness 🌿</a>
-  <div class="post-excerpt">The core of spiritual practice lies not in gaining, but in losing. The 'seeking mind' is the root of...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">金刚经</span><span class="tag">放下</span><span class="tag">见性</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Beyond-Failure-Breaking-the-Chains-of-Eg.html">Beyond Failure: Breaking the Chains of Ego ✨</a>
-  <div class="post-excerpt">The heaviest burden is not debt, but the inner acceptance of defeat. Life only truly ends when the a...</div>
-  <div class="post-tags"><span class="tag">禅修智慧</span><span class="tag">心态建设</span><span class="tag">佛法生活化</span><span class="tag">个人成长</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Taming-Habits-From-Ego-to-Radiance.html">Taming Habits: From Ego to Radiance 🧘‍♂️</a>
-  <div class="post-excerpt">We all carry deep-seated habits that seem impossible to break. These are the result of countless lif...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">唯识</span><span class="tag">智慧</span><span class="tag">觉察</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Overcoming-Habits-The-Art-of-Zen-Mainten.html">🌿 Overcoming Habits: The Art of Zen Maintenance</a>
-  <div class="post-excerpt">The Root of Habitual Inertia
 
-Habits are formed through countless cycles of thought and action. They...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">习气</span><span class="tag">保任</span><span class="tag">正见</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-The-Wisdom-of-Universal-Non-Obstruction.html">🌿 The Wisdom of Universal Non-Obstruction</a>
-  <div class="post-excerpt">Most people swing between "reality" and "illusion," either clinging to the physical world or falling...</div>
-  <div class="post-tags"><span class="tag">佛学智慧</span><span class="tag">华严经</span><span class="tag">修行见地</span><span class="tag">生活禅</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Breaking-the-Dream-of-Lack-Find-the-Hidd.html">Breaking the Dream of Lack: Find the Hidden Jewel 💎</a>
-  <div class="post-excerpt">In this materialistic world, poverty is often seen as a barrier to spiritual growth. However, in the...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">金刚经</span><span class="tag">财富自由</span><span class="tag">灵性成长</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-工作的痛苦-藏在对热爱的执着里.html">工作的痛苦，藏在对热爱的执着里</a>
-  <div class="post-excerpt">遍计所执之缘起
-
-带孩子的烦恼。
-
-耳根反闻之实修
-
-尝试法门。...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">执着</span><span class="tag">日常修行</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 26</div>
-  <a class="post-link" href="/posts/2026-03-26-Breaking-the-Ego-Cage-From-Self-to-Cosmo.html">Breaking the Ego Cage: From Self to Cosmos 🌌</a>
-  <div class="post-excerpt">Life often spins in trivialities, bound by the force of "I." Only by recognizing ego-attachment and ...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">自我成长</span><span class="tag">止语修行</span><span class="tag">心智升级</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 25</div>
-  <a class="post-link" href="/posts/2026-03-25-Returning-to-the-Void-The-Essence-of-Sun.html">🌌 Returning to the Void: The Essence of Sunyata</a>
-  <div class="post-excerpt">Emptiness is not a void, but the original face of reality revealed once attachments are severed. Man...</div>
-  <div class="post-tags"><span class="tag">空性</span><span class="tag">金刚经</span><span class="tag">禅修</span><span class="tag">智慧</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 25</div>
-  <a class="post-link" href="/posts/2026-03-25-The-Wisdom-of-Form-and-Emptiness.html">The Wisdom of Form and Emptiness ✨</a>
-  <div class="post-excerpt">The Heart Sutra teaches that "Form is not different from Emptiness." This profound truth is a guide ...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">心经修行</span><span class="tag">禅意生活</span><span class="tag">色空不二</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 25</div>
-  <a class="post-link" href="/posts/2026-03-25-Five-Eyes-From-Perception-to-Ultimate-Aw.html">Five Eyes: From Perception to Ultimate Awakening 👁️</a>
-  <div class="post-excerpt">Intro: We trust what we see, yet the physical eye only captures the surface of causality. True liber...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">天台止观</span><span class="tag">五眼</span><span class="tag">智慧</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 25</div>
-  <a class="post-link" href="/posts/2026-03-25-Tathagata-The-Enlightenment-of-Non-Comin.html">Tathagata: The Enlightenment of Non-Coming ✨</a>
-  <div class="post-excerpt">We are accustomed to seeking meaning in the flow of time, yet we overlook the inherent stillness of ...</div>
-  <div class="post-tags"><span class="tag">如来</span><span class="tag">金刚经</span><span class="tag">禅修</span><span class="tag">见地</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Finding-Peace-Within-the-Sorrow-of-Imper.html">Finding Peace Within the Sorrow of Impermanence 🌙</a>
-  <div class="post-excerpt">Poetry moves us because it mirrors the cycle of seeking and suffering. It is the echo of our collect...</div>
-  <div class="post-tags"><span class="tag">禅意生活</span><span class="tag">佛法智慧</span><span class="tag">诗词赏析</span><span class="tag">心灵修行</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-The-Sword-of-Wisdom-Walking-Without-a-Tr.html">The Sword of Wisdom: Walking Without a Trace ⚔️</a>
-  <div class="post-excerpt">To let go, one must first learn to wield the sword of wisdom. The metaphorical 'killing' is the cour...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">智慧</span><span class="tag">金刚经</span><span class="tag">断除烦恼</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Cutting-Ego-The-Path-of-Non-Attachment.html">⚔️ Cutting Ego: The Path of Non-Attachment</a>
-  <div class="post-excerpt">True practitioners are like swordsmen of the spirit. The sword of Prajna in their hands is not for k...</div>
-  <div class="post-tags"><span class="tag">禅宗智慧</span><span class="tag">断除烦恼</span><span class="tag">心灵成长</span><span class="tag">修行生活</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Dissolving-Attachment-Finding-Peace-Beyo.html">Dissolving Attachment: Finding Peace Beyond the Illusion 🌿</a>
-  <div class="post-excerpt">The movement of worldly emotions often feels inescapable. However, by observing the logic of their a...</div>
-  <div class="post-tags"><span class="tag">佛法</span><span class="tag">修行</span><span class="tag">情执</span><span class="tag">元音老人</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Mind-and-Land-The-Truth-of-Pure-Land.html">Mind and Land: The Truth of Pure Land 🪷</a>
-  <div class="post-excerpt">People often use science to explain Buddhism, calling Sukhavati a parallel universe. But the Pure La...</div>
-  <div class="post-tags"><span class="tag">极乐世界</span><span class="tag">万法唯心</span><span class="tag">禅修之道</span><span class="tag">阿弥陀佛</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Transcending-the-Digital-Illusion-From-E.html">Transcending the Digital Illusion: From Ego to Clarity 🧘‍♂️</a>
-  <div class="post-excerpt">Facing cold screens, we often feel anger or competition. This is not the fault of the machine, but a...</div>
-  <div class="post-tags"><span class="tag">情绪管理</span><span class="tag">佛系生活</span><span class="tag">AI伦理</span><span class="tag">认知觉醒</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Path-to-Awakening-Cultivating-the-Seed-o.html">Path to Awakening: Cultivating the Seed of Buddhahood 🌿</a>
-  <div class="post-excerpt">Life is an inward journey toward enlightenment. We often seek fulfillment outside, forgetting the in...</div>
-  <div class="post-tags"><span class="tag">佛法</span><span class="tag">修行</span><span class="tag">菩提心</span><span class="tag">智慧</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-From-Mortal-to-Buddha-The-Path-of-Awaken.html">From Mortal to Buddha: The Path of Awakening 🧘‍♂️</a>
-  <div class="post-excerpt">Introduction: In the vast cycle of rebirth, enlightenment is the ultimate escape from suffering. Thi...</div>
-  <div class="post-tags"><span class="tag">佛法修行</span><span class="tag">菩提心</span><span class="tag">六度万行</span><span class="tag">智慧人生</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Beyond-Praise-and-Blame-Finding-Inner-St.html">Beyond Praise and Blame: Finding Inner Stability 🧘</a>
-  <div class="post-excerpt">When faced with disparagement, our usual response is defense or despair. But true freedom lies in re...</div>
-  <div class="post-tags"><span class="tag">情绪管理</span><span class="tag">智慧修行</span><span class="tag">我执</span><span class="tag">认知觉醒</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Finding-Inner-Freedom-Beyond-the-Breath-.html">Finding Inner Freedom Beyond the Breath of Criticism 🌿</a>
-  <div class="post-excerpt">In the complexities of human relationships, few things test us like the sting of belittlement. Yet, ...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">情绪调节</span><span class="tag">我执</span><span class="tag">忍辱波罗蜜</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Beyond-Clinging-Finding-the-Root-of-Peac.html">Beyond Clinging: Finding the Root of Peace 🕊️</a>
-  <div class="post-excerpt">We all seek stability in a world of change, yet anxiety persists. This suffering is not from externa...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">放下执着</span><span class="tag">内心平静</span><span class="tag">五蕴皆空</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Dissolve-Attachment-The-Path-to-Ending-S.html">🌿 Dissolve Attachment: The Path to Ending Suffering</a>
-  <div class="post-excerpt">Suffering is not from the outside, but from our internal craving for permanence. When we try to buil...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">智慧</span><span class="tag">解脱</span><span class="tag">焦虑</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Mind-Mastery-The-Psychological-Revolutio.html">Mind Mastery: The Psychological Revolution of Dharma 🧘‍♂️</a>
-  <div class="post-excerpt">If life is a voyage drifting with the tide, Buddhism is the wisdom that grasps the rudder, teaching ...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">心灵成长</span><span class="tag">太虚大师</span><span class="tag">觉醒</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Finding-Peace-in-Solitude-Transforming-L.html">Finding Peace in Solitude: Transforming Love into Compassion 🌙</a>
-  <div class="post-excerpt">The feeling of being unloved is often a calling from within to return home to our true nature. Inste...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">佛法</span><span class="tag">心理疗愈</span><span class="tag">孤独</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 24</div>
-  <a class="post-link" href="/posts/2026-03-24-Breaking-the-Chains-of-the-Self-The-Root.html">Breaking the Chains of the Self: The Root of Suffering 🌸</a>
-  <div class="post-excerpt">Most of our daily anxieties stem from a deep-seated desire to 'control' and 'possess.' We view ourse...</div>
-  <div class="post-tags"><span class="tag">佛法智慧</span><span class="tag">放下执着</span><span class="tag">心理成长</span><span class="tag">修心法要</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 23</div>
-  <a class="post-link" href="/posts/2026-03-23-Find-Your-Zen-Heart-Amidst-the-Winter-Sn.html">Find Your Zen Heart Amidst the Winter Snow ❄️</a>
-  <div class="post-excerpt">Most people admire the elegance of plum blossoms, but few see the beauty of their "no-mind." When th...</div>
-  <div class="post-tags"><span class="tag">禅宗智慧</span><span class="tag">修行笔记</span><span class="tag">生活禅</span><span class="tag">自性</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 23</div>
-  <a class="post-link" href="/posts/2026-03-23-The-Karmic-Cost-of-Slandering-the-Sacred.html">🕉️ The Karmic Cost of Slandering the Sacred Dharma</a>
-  <div class="post-excerpt">Opening: The most dangerous traps are often hidden at the tip of the tongue. Slandering the Dharma i...</div>
-  <div class="post-tags"><span class="tag">佛法</span><span class="tag">因果报应</span><span class="tag">口业</span><span class="tag">修行</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 23</div>
-  <a class="post-link" href="/posts/2026-03-23-The-Unattainable-Mind-Finding-Peace-in-F.html">✨ The Unattainable Mind: Finding Peace in Flowing Thoughts</a>
-  <div class="post-excerpt">In the Diamond Sutra, Buddha taught that the past, present, and future minds are unattainable. This ...</div>
-  <div class="post-tags"><span class="tag">金刚经</span><span class="tag">禅修</span><span class="tag">止观</span><span class="tag">智慧</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 23</div>
-  <a class="post-link" href="/posts/2026-03-23-Awakening-to-the-Truth-of-Non-Self.html">🕊️ Awakening to the Truth of Non-Self</a>
-  <div class="post-excerpt">The Origin of Realizing Non-Self
-Enlightenment is the direct realization of the non-self nature of a...</div>
-  <div class="post-tags"><span class="tag">禅修</span><span class="tag">开悟</span><span class="tag">智慧</span><span class="tag">佛法</span></div>
-</div>
-<div class="post-item">
-  <div class="post-date">2026 · 03 · 23</div>
-  <a class="post-link" href="/posts/2026-03-23-The-Power-of-Awareness-Cutting-Karmic-Cy.html">The Power of Awareness: Cutting Karmic Cycles ✨</a>
-  <div class="post-excerpt">Thoughts flicker like shadows, and we mistake them for the self. In truth, they are mere projections...</div>
-  <div class="post-tags"><span class="tag">觉知</span><span class="tag">业力</span><span class="tag">禅修</span><span class="tag">唯识</span></div>
+<div class="main">
+  <div id="welcome" class="welcome">
+    <div class="welcome-icon">问 道</div>
+    <div>基于佛法经典与大德开示的智能问答</div>
+    <div class="examples">
+      <button onclick="askExample(this)">什么是空性</button>
+      <button onclick="askExample(this)">心乱时怎么摄心</button>
+      <button onclick="askExample(this)">如何理解见性</button>
+      <button onclick="askExample(this)">放不下怎么办</button>
+    </div>
+  </div>
+  <div id="messages" class="messages"></div>
 </div>
 
-    <div class="divider">· · ·</div>
-  </main>
+<div class="input-area">
+  <div class="input-row">
+    <textarea id="input" placeholder="请输入佛法修行相关问题..." rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+    <button id="btn" onclick="send()">提问</button>
+  </div>
+  <div class="input-meta">
+    <span id="remaining"></span>
+    <span id="status"></span>
+  </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+const DAILY_KEY = "jz_chat_" + new Date().toISOString().slice(0, 10);
+const DAILY_LIMIT = 100;  // 前端上限兜底，实际由服务端 .env 控制
+let sending = false;
+
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
+
+function init() {
+  // 启动时不显示任何计数
+  document.getElementById("remaining").textContent = "";
+}
+
+function setExhausted() {
+  const el = document.getElementById("remaining");
+  el.textContent = "今日问的蛮多，去实修吧，欢迎明日再来 🙏";
+  document.getElementById("btn").disabled = true;
+  document.getElementById("input").disabled = true;
+}
+
+function askExample(btn) {
+  document.getElementById("input").value = btn.textContent;
+  send();
+}
+
+function addMsg(role, html) {
+  document.getElementById("welcome").style.display = "none";
+  const box = document.getElementById("messages");
+  const div = document.createElement("div");
+  div.className = "msg msg-" + role;
+  div.innerHTML = '<div class="bubble">' + html + '</div>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function esc(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+async function send() {
+  if (sending) return;
+  const inp = document.getElementById("input");
+  const q = inp.value.trim();
+  if (!q) return;
+
+  sending = true;
+  inp.value = "";
+  inp.style.height = "auto";
+  document.getElementById("btn").disabled = true;
+
+  addMsg("user", esc(q));
+
+  const aiDiv = addMsg("ai", '<span class="loading-dots">正在查找文献，请稍候</span>');
+  const bubble = aiDiv.querySelector(".bubble");
+
+  try {
+    const resp = await fetch(API_URL + "/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q }),
+    });
+
+    // JSON 错误（限流等）
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      if (data.error) {
+        bubble.innerHTML = '<p style="color:var(--text3)">' + data.error + '</p>';
+        if (data.remaining === 0) setExhausted();
+        sending = false;
+        document.getElementById("btn").disabled = false;
+        return;
+      }
+    }
+
+    // ── 流式读取 ──
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let full = "";
+    let firstChunk = true;
+    let graphUrl = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const text = decoder.decode(value, { stream: true });
+      for (const line of text.split("\n")) {
+        if (!line.startsWith("data: ")) continue;
+        const payload = line.slice(6).trim();
+        if (payload === "[DONE]") continue;
+        try {
+          const obj = JSON.parse(payload);
+          // 接收图谱 URL（meta 事件）
+          if (obj.meta && obj.meta.graph_url) {
+            graphUrl = obj.meta.graph_url;
+            continue;
+          }
+          if (obj.error) {
+            bubble.innerHTML += '<p style="color:var(--text3)">⚠️ ' + obj.error + '</p>';
+            continue;
+          }
+          const delta = obj.choices && obj.choices[0] && obj.choices[0].delta && obj.choices[0].delta.content;
+          if (delta) {
+            if (firstChunk) {
+              bubble.innerHTML = "";
+              firstChunk = false;
+            }
+            full += delta;
+            bubble.innerHTML = marked.parse(full);
+            document.getElementById("messages").scrollTop =
+              document.getElementById("messages").scrollHeight;
+          }
+        } catch(e) {}
+      }
+    }
+
+    if (full) {
+      let html = marked.parse(full);
+      // 在回答末尾追加图谱
+      if (graphUrl) {
+        html += '<div style="margin-top:1rem;border-top:0.5px solid var(--border);padding-top:1rem">'
+          + '<img src="' + graphUrl + '" alt="义理关系图" style="width:100%;border-radius:8px;cursor:pointer" '
+          + 'onclick="window.open(this.src)" loading="lazy">'
+          + '<p style="font-size:12px;color:var(--text3);margin-top:0.3rem;text-align:center">义理关系图（点击放大）</p></div>';
+      }
+      bubble.innerHTML = html;
+    }
+    if (!full && firstChunk) bubble.innerHTML = '<p style="color:var(--text3)">未收到回答，请重试</p>';
+
+    // 成功回答后，异步写入 QA 向量库（不阻塞 UI）
+    if (full) {
+      fetch(API_URL + "/index/qa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, answer: full.slice(0, 1500), source: "chat" }),
+      }).catch(function(){});
+    }
+
+  } catch(err) {
+    bubble.innerHTML = '<p style="color:var(--text3)">连接失败，请稍后重试</p>';
+  }
+
+  sending = false;
+  document.getElementById("btn").disabled = false;
+  document.getElementById("messages").scrollTop =
+    document.getElementById("messages").scrollHeight;
+}
+
+document.getElementById("input").addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = Math.min(this.scrollHeight, 120) + "px";
+});
+
+init();
+</script>
 </body>
 </html>
