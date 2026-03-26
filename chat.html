@@ -294,8 +294,7 @@ body {
 <div class="main">
   <div id="welcome" class="welcome">
     <div class="welcome-icon">问 道</div>
-    <div>基于个人修行笔记与佛法经典的智能问答</div>
-    <div>每日可免费提问 <span id="limit-num">3</span> 次</div>
+    <div>基于佛法经典与大德开示的智能问答</div>
     <div class="examples">
       <button onclick="askExample(this)">什么是空性</button>
       <button onclick="askExample(this)">心乱时怎么摄心</button>
@@ -321,6 +320,7 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 const DAILY_KEY = "jz_chat_" + new Date().toISOString().slice(0, 10);
+const DAILY_LIMIT = 100;  // 前端上限兜底，实际由服务端 .env 控制
 let sending = false;
 
 marked.setOptions({
@@ -329,24 +329,15 @@ marked.setOptions({
 });
 
 function init() {
-  const used = parseInt(localStorage.getItem(DAILY_KEY) || "0");
-  const total = parseInt(document.getElementById("limit-num").textContent);
-  updateRemaining(total - used);
+  // 启动时不显示任何计数
+  document.getElementById("remaining").textContent = "";
 }
 
-function updateRemaining(n) {
+function setExhausted() {
   const el = document.getElementById("remaining");
-  const btn = document.getElementById("btn");
-  const inp = document.getElementById("input");
-  if (n <= 0) {
-    el.textContent = "今日次数已用完，明日再来 🙏";
-    btn.disabled = true;
-    inp.disabled = true;
-  } else {
-    el.textContent = "今日剩余 " + n + " 次";
-    btn.disabled = false;
-    inp.disabled = false;
-  }
+  el.textContent = "今日问的蛮多，去实修吧，欢迎明日再来 🙏";
+  document.getElementById("btn").disabled = true;
+  document.getElementById("input").disabled = true;
 }
 
 function askExample(btn) {
@@ -375,10 +366,6 @@ async function send() {
   const q = inp.value.trim();
   if (!q) return;
 
-  const used = parseInt(localStorage.getItem(DAILY_KEY) || "0");
-  const limit = parseInt(document.getElementById("limit-num").textContent);
-  if (used >= limit) { updateRemaining(0); return; }
-
   sending = true;
   inp.value = "";
   inp.style.height = "auto";
@@ -386,7 +373,6 @@ async function send() {
 
   addMsg("user", esc(q));
 
-  // ── 加载提示（纯文字，不依赖 CSS 伪元素）──
   const aiDiv = addMsg("ai", '<span class="loading-dots">正在查找文献，请稍候</span>');
   const bubble = aiDiv.querySelector(".bubble");
 
@@ -403,16 +389,12 @@ async function send() {
       const data = await resp.json();
       if (data.error) {
         bubble.innerHTML = '<p style="color:var(--text3)">' + data.error + '</p>';
-        if (data.remaining === 0) updateRemaining(0);
+        if (data.remaining === 0) setExhausted();
         sending = false;
         document.getElementById("btn").disabled = false;
         return;
       }
     }
-
-    // 记录使用
-    localStorage.setItem(DAILY_KEY, String(used + 1));
-    updateRemaining(limit - used - 1);
 
     // ── 流式读取 ──
     const reader = resp.body.getReader();
