@@ -3,9 +3,19 @@
   <channel>
     <title>寂照</title>
     <link>https://blog.3333444.xyz</link>
-    <description>在尘世中修行，在修行中自在</description>
+    <description>基于佛经与大德开示的智能问答系统</description>
     <language>zh-Hans</language>
     <atom:link href="https://blog.3333444.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>参差多态：于万象纷呈处契入如实道场</title>
+      <link>https://blog.3333444.xyz/posts/2026-03-27-参差多态-于万象纷呈处契入如实道场.html</link>
+      <description>万物之生，本无一律。我们在纷繁复杂的世间打转，往往被参差多态的幻象遮蔽了双眼，却不知这万象正是最好的修行资粮。直面参差，方见本真。
+
+众生交藉之缘起
+世间贫富苦乐、异形异能的差异，并非无端而生，皆是众生妄心造作与业力交织的结果。若将幸福寄托</description>
+      <pubDate>2026-03-27</pubDate>
+      <guid>https://blog.3333444.xyz/posts/2026-03-27-参差多态-于万象纷呈处契入如实道场.html</guid>
+    </item>
     <item>
       <title>大医王论：契入如来法药的解脱路径</title>
       <link>https://blog.3333444.xyz/posts/2026-03-27-大医王论-契入如来法药的解脱路径.html</link>
@@ -158,13 +168,6 @@ Habits are formed through countless cycles of thought and action. They are like 
       <description>To let go, one must first learn to wield the sword of wisdom. The metaphorical &#x27;killing&#x27; is the courage to break with th</description>
       <pubDate>2026-03-24</pubDate>
       <guid>https://blog.3333444.xyz/posts/2026-03-24-The-Sword-of-Wisdom-Walking-Without-a-Tr.html</guid>
-    </item>
-    <item>
-      <title>⚔️ Cutting Ego: The Path of Non-Attachment</title>
-      <link>https://blog.3333444.xyz/posts/2026-03-24-Cutting-Ego-The-Path-of-Non-Attachment.html</link>
-      <description>True practitioners are like swordsmen of the spirit. The sword of Prajna in their hands is not for killing living beings</description>
-      <pubDate>2026-03-24</pubDate>
-      <guid>https://blog.3333444.xyz/posts/2026-03-24-Cutting-Ego-The-Path-of-Non-Attachment.html</guid>
     </item>
   </channel>
 </rss>
