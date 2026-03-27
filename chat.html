@@ -45,8 +45,19 @@
     .nav { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5rem 0 1.5rem; border-bottom: 0.5px solid var(--border); }
     .nav-title { font-family: 'JingHua', serif; font-size: 24px; color: var(--text); text-decoration: none; letter-spacing: 0.2em; }
     .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a { font-size: 16px; color: var(--text3); text-decoration: none; transition: color 0.3s; }
+    .nav-links a { font-size: 16px; color: var(--text3); text-decoration: none; }
     .nav-links a.active { color: var(--accent); }
+
+    /* Textarea 修复版样式 */
+    textarea { 
+      flex: 1; font-family: inherit; font-size: 15px; 
+      background: var(--bg2); 
+      color: var(--text); /* 显式跟随主题文字颜色 */
+      caret-color: var(--accent); /* 光标颜色 */
+      border: 0.5px solid var(--border); border-radius: 14px; 
+      padding: 0.8rem 1.2rem; resize: none; outline: none; transition: border-color 0.3s; 
+    }
+    textarea:focus { border-color: var(--accent); }
     
 body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; margin-top: 1rem; }
@@ -57,11 +68,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100
 .msg-user { text-align: right; }
 .msg-user .bubble { display: inline-block; background: var(--accent); color: #fff; padding: 0.7rem 1.2rem; border-radius: 18px 18px 4px 18px; text-align: left; font-size: 15px; }
 .msg-ai .bubble { background: var(--bg2); padding: 1.2rem 1.5rem; border-radius: 4px 18px 18px 18px; border: 0.5px solid var(--border); font-size: 15px; line-height: 1.9; }
-.msg-ai .bubble h3 { font-family: 'JingHua', serif; font-size: 17px; color: var(--accent); margin: 1.5rem 0 0.5rem; }
 .input-area { padding: 1rem 0 2rem; border-top: 0.5px solid var(--border); background: var(--bg); position: sticky; bottom: 0; }
 .input-row { display: flex; gap: 0.8rem; align-items: flex-end; }
-textarea { flex: 1; font-family: inherit; font-size: 15px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: 14px; padding: 0.8rem 1.2rem; resize: none; outline: none; transition: border-color 0.3s; }
-textarea:focus { border-color: var(--accent); }
 button { background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 0.7rem 1.4rem; cursor: pointer; font-size: 15px; }
 .examples { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; }
 .examples button { font-size: 13px; color: var(--text2); background: var(--bg2); border: 0.5px solid var(--border); border-radius: 20px; padding: 0.45rem 1rem; cursor: pointer; }
@@ -80,7 +88,6 @@ button { background: var(--accent); color: #fff; border: none; border-radius: 12
       <button onclick="askExample(this)">什么是空性</button>
       <button onclick="askExample(this)">心乱时怎么摄心</button>
       <button onclick="askExample(this)">如何理解见性</button>
-      <button onclick="askExample(this)">放不下怎么办</button>
     </div>
   </div>
   <div id="messages" class="messages"></div>
@@ -97,9 +104,7 @@ button { background: var(--accent); color: #fff; border: none; border-radius: 12
 <script>
 let sending = false;
 marked.setOptions({ breaks: true, gfm: true });
-
 function askExample(btn) { document.getElementById("input").value = btn.textContent; send(); }
-
 function addMsg(role, html) {
   document.getElementById("welcome").style.display = "none";
   const box = document.getElementById("messages");
@@ -110,7 +115,6 @@ function addMsg(role, html) {
   box.scrollTop = box.scrollHeight;
   return div;
 }
-
 async function send() {
   if (sending) return;
   const inp = document.getElementById("input");
@@ -119,7 +123,6 @@ async function send() {
   addMsg("user", q.replace(/&/g,"&amp;").replace(/</g,"&lt;"));
   const aiDiv = addMsg("ai", '<span class="loading-dots">正在检索义理</span>');
   const bubble = aiDiv.querySelector(".bubble");
-
   try {
     const resp = await fetch(API_URL + "/chat", {
       method: "POST",
@@ -129,7 +132,6 @@ async function send() {
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
     let full = "", first = true, graphUrl = "";
-
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -151,11 +153,9 @@ async function send() {
       }
     }
     if (SHOW_GRAPH && graphUrl) {
-      bubble.innerHTML += `<div style="margin-top:1.5rem;border-top:0.5px solid var(--border);padding-top:1rem">
-        <img src="${graphUrl}" style="width:100%%;border-radius:10px;cursor:pointer;border:0.5px solid var(--border)" onclick="window.open(this.src)">
-        <p style="font-size:12px;color:var(--text3);text-align:center;margin-top:0.5rem">义理关系图</p></div>`;
+      bubble.innerHTML += `<div style="margin-top:1.5rem;border-top:0.5px solid var(--border);padding-top:1rem"><img src="${graphUrl}" style="width:100%%;border-radius:10px;cursor:pointer;border:0.5px solid var(--border)" onclick="window.open(this.src)"><p style="font-size:12px;color:var(--text3);text-align:center;margin-top:0.5rem">义理关系图</p></div>`;
     }
-  } catch(err) { bubble.innerHTML = "网络开小差了，请重试"; }
+  } catch(err) { bubble.innerHTML = "网络不稳定，请重试"; }
   sending = false; document.getElementById("btn").disabled = false;
 }
 </script>
