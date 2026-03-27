@@ -37,53 +37,32 @@
       }
     }
     html { font-size: 16px; }
-    
-    /* 核心修复 1：强制全局元素继承相同的正文字体 */
-    body, button, input, textarea {
+    body {
       font-family: 'LXGW WenKai', 'PingFang SC', sans-serif;
       background: var(--bg); color: var(--text); line-height: 1.8;
     }
-    
-    /* 核心修复 2：特定标题组件统一使用京华字体 */
-    h1, h2, h3, .nav-title, .welcome-icon {
-      font-family: 'JingHua', serif;
-    }
-
     .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; }
     .nav { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5rem 0 1.5rem; border-bottom: 0.5px solid var(--border); }
-    .nav-title { font-size: 24px; color: var(--text); text-decoration: none; letter-spacing: 0.2em; }
+    .nav-title { font-family: 'JingHua', serif; font-size: 24px; color: var(--text); text-decoration: none; letter-spacing: 0.2em; }
     .nav-links { display: flex; gap: 1.5rem; }
     .nav-links a { font-size: 16px; color: var(--text3); text-decoration: none; }
     .nav-links a.active { color: var(--accent); }
 
+    /* Textarea 修复版样式 */
     textarea { 
-      flex: 1; font-size: 15px; 
-      background: var(--bg2); color: var(--text); 
-      caret-color: var(--accent); border: 0.5px solid var(--border); border-radius: 14px; 
+      flex: 1; font-family: inherit; font-size: 15px; 
+      background: var(--bg2); 
+      color: var(--text); /* 显式跟随主题文字颜色 */
+      caret-color: var(--accent); /* 光标颜色 */
+      border: 0.5px solid var(--border); border-radius: 14px; 
       padding: 0.8rem 1.2rem; resize: none; outline: none; transition: border-color 0.3s; 
     }
     textarea:focus { border-color: var(--accent); }
-
-    /* 滚动文字动画 */
-    .text-scroll-up {
-      display: inline-block;
-      animation: scrollUp 0.6s ease-out;
-    }
-    @keyframes scrollUp {
-      0% { transform: translateY(10px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
-    }
-    
-    /* 最后一句停留时的呼吸动画 */
-    @keyframes text-breath {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
     
 body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; margin-top: 1rem; }
 .welcome { text-align: center; padding: 4rem 0; color: var(--text3); font-size: 14px; }
-.welcome-icon { font-size: 32px; color: var(--accent); margin-bottom: 0.8rem; letter-spacing: 0.1em; }
+.welcome-icon { font-family: 'JingHua', serif; font-size: 32px; color: var(--accent); margin-bottom: 0.8rem; letter-spacing: 0.1em; }
 .messages { flex: 1; overflow-y: auto; padding: 1rem 0; -webkit-overflow-scrolling: touch; }
 .msg { margin-bottom: 1.8rem; }
 .msg-user { text-align: right; }
@@ -94,6 +73,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100
 button { background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 0.7rem 1.4rem; cursor: pointer; font-size: 15px; }
 .examples { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; }
 .examples button { font-size: 13px; color: var(--text2); background: var(--bg2); border: 0.5px solid var(--border); border-radius: 20px; padding: 0.45rem 1rem; cursor: pointer; }
+.loading-dots::after { content: ''; animation: ldots 1.5s steps(4) infinite; }
+@keyframes ldots { 0%% { content: ''; } 25%% { content: ' ·'; } 50%% { content: ' · ·'; } 75%% { content: ' · · ·'; } }
 </style>
 </head>
 <body>
@@ -140,38 +121,8 @@ async function send() {
   const q = inp.value.trim(); if (!q) return;
   sending = true; inp.value = ""; document.getElementById("btn").disabled = true;
   addMsg("user", q.replace(/&/g,"&amp;").replace(/</g,"&lt;"));
-  
-  // 初始化滚动文案
-  const aiDiv = addMsg("ai", '<span id="scroll-status" class="text-scroll-up">正在开启经藏索引...</span>');
+  const aiDiv = addMsg("ai", '<span class="loading-dots">正在检索义理</span>');
   const bubble = aiDiv.querySelector(".bubble");
-  const statusEl = aiDiv.querySelector("#scroll-status");
-  
-  // 扩充的文案流
-  const statusMsgs = [
-    "正在开启经藏索引...",
-    "正在翻阅大藏经与续藏经...",
-    "正在检索历代大德开示...",
-    "正在跨越时空感悟义理...",
-    "正在梳理逻辑，去除冗余...",
-    "正在将深奥佛法凝练为平实文字...",
-    "即将为您呈送最终答复..."
-  ];
-  let msgIdx = 0;
-  
-  // 间隔延长至 3500ms，且执行到最后一句不再循环
-  const scrollTimer = setInterval(() => {
-    msgIdx++;
-    if (msgIdx < statusMsgs.length) {
-      statusEl.classList.remove('text-scroll-up');
-      void statusEl.offsetWidth; // 触发重绘以重启动画
-      statusEl.innerText = statusMsgs[msgIdx];
-      statusEl.classList.add('text-scroll-up');
-    } else {
-      clearInterval(scrollTimer); // 停止定时器
-      statusEl.style.animation = "text-breath 2s infinite ease-in-out"; // 切换为呼吸动画
-    }
-  }, 3500);
-
   try {
     const resp = await fetch(API_URL + "/chat", {
       method: "POST",
@@ -194,11 +145,7 @@ async function send() {
           if (SHOW_GRAPH && obj.meta?.graph_url) { graphUrl = obj.meta.graph_url; continue; }
           const delta = obj.choices?.[0]?.delta?.content;
           if (delta) {
-            if (first) { 
-                clearInterval(scrollTimer); // 接收到首字时立刻停止动画
-                bubble.innerHTML = ""; 
-                first = false; 
-            }
+            if (first) { bubble.innerHTML = ""; first = false; }
             full += delta; bubble.innerHTML = marked.parse(full);
             document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
           }
@@ -208,10 +155,7 @@ async function send() {
     if (SHOW_GRAPH && graphUrl) {
       bubble.innerHTML += `<div style="margin-top:1.5rem;border-top:0.5px solid var(--border);padding-top:1rem"><img src="${graphUrl}" style="width:100%%;border-radius:10px;cursor:pointer;border:0.5px solid var(--border)" onclick="window.open(this.src)"><p style="font-size:12px;color:var(--text3);text-align:center;margin-top:0.5rem">义理关系图</p></div>`;
     }
-  } catch(err) { 
-    clearInterval(scrollTimer);
-    bubble.innerHTML = "网络不稳定，请重试"; 
-  }
+  } catch(err) { bubble.innerHTML = "网络不稳定，请重试"; }
   sending = false; document.getElementById("btn").disabled = false;
 }
 </script>
