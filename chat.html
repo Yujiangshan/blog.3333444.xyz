@@ -1,17 +1,35 @@
 <!DOCTYPE html>
+
 <html lang="zh-Hans">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>问答 · 寂照</title>
 <meta name="description" content="寂照 — 佛法修行问答，基于佛法经典与大德开示的智能问答">
+
+<!-- 预连接 -->
+
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://media.3333444.xyz" crossorigin>
+<link rel="preconnect" href="https://api.3333444.xyz">
+<link rel="dns-prefetch" href="https://api.3333444.xyz">
+
+<!-- 预加载关键资源 -->
+
+<link rel="preload" href="https://media.3333444.xyz/fonts/JingHuaOldSong.ttf"
+  as="font" type="font/truetype" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+  as="script">
+
+<!-- 异步加载 LXGW WenKai -->
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css"></noscript>
+
 <script>
 const API_URL = "https://api.3333444.xyz";
 </script>
+
 <style>
 @font-face {
   font-family: 'JingHua';
@@ -281,6 +299,7 @@ body {
   .welcome { padding: 2rem 0 1.5rem; }
 }
 </style>
+
 </head>
 <body>
 
@@ -319,25 +338,40 @@ body {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- marked.js：async + preload 配合，onload 设标志位 -->
+
+<script async src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+  onload="markedReady=true; marked.setOptions({ breaks: true, gfm: true });"></script>
+
 <script>
 const DAILY_KEY = "jz_chat_" + new Date().toISOString().slice(0, 10);
-const DAILY_LIMIT = 100;  // 前端上限兜底，实际由服务端 .env 控制
+const DAILY_LIMIT = 100;
 let sending = false;
+let markedReady = false;
 
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-});
+// marked 尚未就绪时降级为纯文本换行
+function renderMarkdown(text) {
+  if (markedReady && typeof marked !== "undefined") {
+    return marked.parse(text);
+  }
+  return "<p>" + text.replace(/\n/g, "<br>") + "</p>";
+}
+
+// 等待提示语序列，每 2.2 秒切换一条
+const LOADING_MSGS = [
+  "正在查询佛法经典",
+  "正在匹配大德开示",
+  "正在比对注疏义理",
+  "正在准备文本",
+  "如如不动，稍候片刻",
+];
 
 function init() {
-  // 启动时不显示任何计数
   document.getElementById("remaining").textContent = "";
 }
 
 function setExhausted() {
-  const el = document.getElementById("remaining");
-  el.textContent = "今日问的蛮多，去实修吧，欢迎明日再来 🙏";
+  document.getElementById("remaining").textContent = "今日问的蛮多，去实修吧，欢迎明日再来 🙏";
   document.getElementById("btn").disabled = true;
   document.getElementById("input").disabled = true;
 }
@@ -375,8 +409,18 @@ async function send() {
 
   addMsg("user", esc(q));
 
-  const aiDiv = addMsg("ai", '<span class="loading-dots">正在查找文献，请稍候</span>');
+  // 插入 AI 气泡，显示第一条等待提示
+  const aiDiv = addMsg("ai", '<span id="loading-tip" class="loading-dots">' + LOADING_MSGS[0] + '</span>');
   const bubble = aiDiv.querySelector(".bubble");
+
+  // 启动轮换 timer，停在最后一条不再循环
+  let loadingIdx = 0;
+  const loadingTimer = setInterval(() => {
+    loadingIdx++;
+    const tip = document.getElementById("loading-tip");
+    if (tip) tip.textContent = LOADING_MSGS[Math.min(loadingIdx, LOADING_MSGS.length - 1)];
+    if (loadingIdx >= LOADING_MSGS.length - 1) clearInterval(loadingTimer);
+  }, 2200);
 
   try {
     const resp = await fetch(API_URL + "/chat", {
@@ -390,6 +434,7 @@ async function send() {
     if (ct.includes("application/json")) {
       const data = await resp.json();
       if (data.error) {
+        clearInterval(loadingTimer);
         bubble.innerHTML = '<p style="color:var(--text3)">' + data.error + '</p>';
         if (data.remaining === 0) setExhausted();
         sending = false;
@@ -428,11 +473,12 @@ async function send() {
           const delta = obj.choices && obj.choices[0] && obj.choices[0].delta && obj.choices[0].delta.content;
           if (delta) {
             if (firstChunk) {
+              clearInterval(loadingTimer); // 收到正文，立即停止轮换
               bubble.innerHTML = "";
               firstChunk = false;
             }
             full += delta;
-            bubble.innerHTML = marked.parse(full);
+            bubble.innerHTML = renderMarkdown(full);
             document.getElementById("messages").scrollTop =
               document.getElementById("messages").scrollHeight;
           }
@@ -441,8 +487,7 @@ async function send() {
     }
 
     if (full) {
-      let html = marked.parse(full);
-      // 在回答末尾追加图谱
+      let html = renderMarkdown(full);
       if (graphUrl) {
         html += '<div style="margin-top:1rem;border-top:0.5px solid var(--border);padding-top:1rem">'
           + '<img src="' + graphUrl + '" alt="义理关系图" style="width:100%;border-radius:8px;cursor:pointer" '
@@ -451,9 +496,12 @@ async function send() {
       }
       bubble.innerHTML = html;
     }
-    if (!full && firstChunk) bubble.innerHTML = '<p style="color:var(--text3)">未收到回答，请重试</p>';
+    if (!full && firstChunk) {
+      clearInterval(loadingTimer);
+      bubble.innerHTML = '<p style="color:var(--text3)">未收到回答，请重试</p>';
+    }
 
-    // 成功回答后，异步写入 QA 向量库（不阻塞 UI）
+    // 成功后异步写入 QA 向量库
     if (full) {
       fetch(API_URL + "/index/qa", {
         method: "POST",
@@ -463,6 +511,7 @@ async function send() {
     }
 
   } catch(err) {
+    clearInterval(loadingTimer); // 出错也要清除 timer
     bubble.innerHTML = '<p style="color:var(--text3)">连接失败，请稍后重试</p>';
   }
 
@@ -479,5 +528,6 @@ document.getElementById("input").addEventListener("input", function() {
 
 init();
 </script>
+
 </body>
 </html>
