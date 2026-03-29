@@ -34,76 +34,140 @@
             }
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        /* 基础重置 */
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            /* 强制所有元素在必要时换行 */
+            overflow-wrap: break-word; 
+            word-wrap: break-word;
+            word-break: break-word;
+        }
         
         body {
             font-family: 'LXGW WenKai', 'PingFang SC', sans-serif;
             background: var(--bg); color: var(--text); line-height: 1.8;
-            min-height: 100vh; display: flex; flex-direction: column;
-            font-size: var(--base-fz); overflow-wrap: anywhere; word-break: break-word;
+            min-height: 100vh; 
+            display: flex; flex-direction: column;
+            font-size: var(--base-fz);
+            /* 防止 body 出现横向滚动条 */
+            overflow-x: hidden;
+            width: 100vw;
         }
 
+        /* 导航优化 */
         .nav {
-            max-width: var(--max-w); width: 100%; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 1.2rem; border-bottom: 0.5px solid var(--border);
-            flex-wrap: wrap; gap: 10px;
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 0.5px solid var(--border);
+            flex-shrink: 0;
         }
 
         .nav-title {
             font-family: 'JingHua', serif; font-size: var(--nav-fz);
-            color: var(--text); text-decoration: none; letter-spacing: 0.1em;
+            color: var(--text); text-decoration: none; 
+            white-space: nowrap; /* 标题不换行 */
+            margin-right: 10px;
         }
 
-        .nav-right { display: flex; align-items: center; gap: 0.8rem; }
+        .nav-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            min-width: 0; /* 允许收缩 */
+        }
 
         .btn-toggle {
             background: var(--bg3); border: 1px solid var(--border);
             color: var(--text); padding: 0.4rem 0.6rem; border-radius: 6px;
-            font-size: 14px; cursor: pointer;
+            font-size: 14px; cursor: pointer; white-space: nowrap;
         }
         body.mode-big .btn-toggle { font-size: 16px; font-weight: bold; background: var(--accent); color: #fff; }
 
+        .nav-links { display: flex; gap: 0.8rem; }
         .nav-links a {
             font-size: calc(var(--base-fz) - 1px); color: var(--text2);
-            text-decoration: none; margin-left: 0.8rem;
+            text-decoration: none; white-space: nowrap;
         }
-        .nav-links a.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .nav-links a.active { color: var(--accent); font-weight: bold; }
 
+        /* 主体 */
         .main {
-            max-width: var(--max-w); width: 100%; margin: 0 auto;
-            padding: 0 1.2rem; flex: 1; display: flex; flex-direction: column; overflow: hidden;
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* 关键：允许 flex 子项收缩 */
         }
 
-        .messages { flex: 1; overflow-y: auto; padding: 1.5rem 0; scroll-behavior: smooth; }
+        .messages { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 1rem 0; 
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
 
-        .msg { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 1.5rem; width: 100%; display: flex; flex-direction: column; }
         .msg-user { align-items: flex-end; }
         .msg-ai { align-items: flex-start; }
 
         .bubble {
-            padding: 1rem 1.2rem; border-radius: 18px; max-width: 92%;
-            font-size: var(--msg-fz); overflow-wrap: anywhere; word-break: break-word;
+            padding: 1rem; 
+            border-radius: 18px; 
+            /* 关键修复：确保气泡永远不会撑破屏幕 */
+            max-width: calc(100% - 10px); 
+            font-size: var(--msg-fz);
+            position: relative;
         }
 
         .msg-user .bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
-        .msg-ai .bubble { background: var(--bg2); border: 0.5px solid var(--border); border-bottom-left-radius: 4px; }
-
-        .msg-ai .bubble blockquote { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--bg); }
-        .msg-ai .bubble h3 { margin: 1.2rem 0 0.5rem; font-family: 'JingHua', serif; color: var(--accent); }
-
-        .input-area {
-            max-width: var(--max-w); width: 100%; margin: 0 auto;
-            padding: 1rem 1.2rem calc(1rem + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border); background: var(--bg);
+        .msg-ai .bubble { 
+            background: var(--bg2); 
+            border: 0.5px solid var(--border); 
+            border-bottom-left-radius: 4px; 
+            width: auto;
         }
 
-        .input-row { display: flex; gap: 0.6rem; align-items: flex-end; }
+        /* 修正 Markdown 里的代码块或长文本溢出 */
+        .bubble pre, .bubble code { white-space: pre-wrap; word-break: break-all; }
+        .bubble blockquote { border-left: 4px solid var(--accent); padding: 0.5rem 0.8rem; margin: 1rem 0; background: var(--bg); }
+
+        /* 输入区修复 */
+        .input-area {
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0.8rem 1rem calc(0.8rem + env(safe-area-inset-bottom));
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .input-row { 
+            display: flex; 
+            gap: 0.6rem; 
+            align-items: flex-end; 
+            width: 100%;
+        }
         
         textarea {
-            flex: 1; font-family: inherit; font-size: var(--input-fz);
+            flex: 1; 
+            min-width: 0; /* 允许 textarea 在 flex 容器中缩小 */
+            font-family: inherit; 
+            font-size: var(--input-fz);
             background: var(--bg2); border: 1px solid var(--border);
-            border-radius: 12px; padding: 0.8rem; min-height: 48px; max-height: 150px;
+            border-radius: 12px; padding: 0.8rem; 
+            min-height: 48px; max-height: 200px;
             outline: none; color: var(--text);
         }
 
@@ -111,13 +175,19 @@
             background: var(--accent); color: #fff; border: none;
             height: 48px; padding: 0 1.2rem; border-radius: 10px;
             font-weight: bold; cursor: pointer; white-space: nowrap;
+            flex-shrink: 0; /* 禁止按钮缩小 */
         }
 
-        .examples { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; padding: 2rem 0; }
+        .examples { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; padding: 1.5rem 0; }
         .examples button {
             background: var(--bg2); border: 1px solid var(--border);
-            padding: 0.5rem 1rem; border-radius: 20px;
+            padding: 0.5rem 0.8rem; border-radius: 20px;
             font-family: inherit; font-size: 14px; cursor: pointer; color: var(--text2);
+        }
+
+        @media (max-width: 400px) {
+            .nav { padding: 0.8rem 0.5rem; }
+            .nav-links { display: none; } /* 超小屏幕隐藏链接文字，保住大字版布局 */
         }
     </style>
 </head>
@@ -130,16 +200,15 @@
             <div class="nav-links">
                 <a href="/">文章</a>
                 <a href="/chat.html" class="active">问答</a>
-                <a href="/about.html">关于</a>
             </div>
         </div>
     </nav>
 
     <div class="main">
-        <div id="welcome" class="welcome">
-            <div style="text-align:center; padding: 3rem 0 1rem;">
-                <div style="font-family:'JingHua', serif; font-size: 36px; color:var(--accent); margin-bottom:10px;">问 道</div>
-                <p style="color:var(--text3)">基于佛法经典与大德开示的智能问答</p>
+        <div id="welcome">
+            <div style="text-align:center; padding: 2rem 0 1rem;">
+                <div style="font-family:'JingHua', serif; font-size: 32px; color:var(--accent); margin-bottom:10px;">问 道</div>
+                <p style="color:var(--text3); font-size: 0.9rem;">基于佛法经典与大德开示的智能问答</p>
             </div>
             <div class="examples">
                 <button onclick="askExample(this)">什么是空性</button>
@@ -162,15 +231,7 @@
     <script>
         let markedReady = false;
         const API_URL = "https://api.3333444.xyz";
-        
-        // 等待提示语序列
-        const LOADING_MSGS = [ 
-            "正在查询佛法经典", 
-            "正在匹配大德开示", 
-            "正在比对注疏义理", 
-            "正在准备文本", 
-            "如如不动，稍候片刻", 
-        ];
+        const LOADING_MSGS = ["正在查询佛法经典", "正在匹配大德开示", "正在比对注疏义理", "正在准备文本", "如如不动，稍候片刻"];
 
         function toggleMode() {
             const isBig = document.body.classList.toggle('mode-big');
@@ -214,15 +275,20 @@
             inp.style.height = "auto";
             addMsg("user", q);
 
-            // 初始化等待状态
-            const aiDiv = addMsg("ai", LOADING_MSGS[0]);
+            const aiDiv = addMsg("ai", "");
             const bubble = aiDiv.querySelector(".bubble");
             
-            let msgIdx = 1;
-            const loadTimer = setInterval(() => {
-                bubble.innerText = LOADING_MSGS[msgIdx % LOADING_MSGS.length];
-                msgIdx++;
-            }, 1500);
+            let msgIdx = 0;
+            let dotCount = 0;
+            const dotTimer = setInterval(() => {
+                dotCount = (dotCount + 1) % 5;
+                bubble.innerText = LOADING_MSGS[msgIdx] + ".".repeat(dotCount);
+            }, 500);
+
+            const msgTimer = setInterval(() => {
+                if (msgIdx < LOADING_MSGS.length - 1) msgIdx++;
+                else clearInterval(msgTimer);
+            }, 3000);
 
             try {
                 const resp = await fetch(API_URL + "/chat", {
@@ -251,23 +317,23 @@
                                 const obj = JSON.parse(payload);
                                 const content = obj.choices?.[0]?.delta?.content;
                                 if (content) {
-                                    // 收到第一条有效内容时，停止滚动加载语
                                     if (!hasStarted) {
-                                        clearInterval(loadTimer);
+                                        clearInterval(dotTimer);
+                                        clearInterval(msgTimer);
                                         bubble.innerHTML = "";
                                         hasStarted = true;
                                     }
                                     full += content;
                                     bubble.innerHTML = renderMarkdown(full);
-                                    const box = document.getElementById("messages");
-                                    box.scrollTop = box.scrollHeight;
+                                    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
                                 }
                             } catch(e) {}
                         }
                     }
                 }
             } catch (err) {
-                clearInterval(loadTimer);
+                clearInterval(dotTimer);
+                clearInterval(msgTimer);
                 bubble.innerHTML = "连接失败，请检查网络。";
             }
         }
