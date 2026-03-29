@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>问答 · 寂照</title>
-    <meta name="description" content="寂照 — 佛法修行问答，基于佛法经典与大德开示的智能问答">
-
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preconnect" href="https://media.3333444.xyz" crossorigin>
-    <link rel="preload" href="https://media.3333444.xyz/fonts/JingHuaOldSong.ttf" as="font" type="font/truetype" crossorigin>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
-
     <style>
         @font-face {
             font-family: 'JingHua';
@@ -18,35 +11,19 @@
             font-display: swap;
         }
 
-        /* 基础变量 */
         :root {
-            --bg: #faf9f7;
-            --bg2: #f2f0ec;
-            --bg3: #e8e5df;
-            --text: #2c2820;
-            --text2: #6b6358;
-            --text3: #a09890;
-            --border: rgba(44, 40, 32, 0.12);
-            --accent: #8b7355;
-            --max-w: 720px;
-            --base-fz: 16px;
-            --nav-fz: 22px;
-            --msg-fz: 16px;
-            --input-fz: 16px;
+            --bg: #faf9f7; --bg2: #f2f0ec; --bg3: #e8e5df;
+            --text: #2c2820; --text2: #6b6358; --text3: #a09890;
+            --border: rgba(44, 40, 32, 0.12); --accent: #8b7355;
+            --max-w: 720px; --base-fz: 16px; --nav-fz: 22px;
+            --msg-fz: 16px; --input-fz: 16px;
         }
 
-        /* 大字模式变量 */
         body.mode-big {
-            --text: #1a1712;
-            --text2: #3d3932;
-            --text3: #70685e;
-            --border: rgba(44, 40, 32, 0.25);
-            --accent: #7a6143;
-            --max-w: 800px;
-            --base-fz: 20px;
-            --nav-fz: 26px;
-            --msg-fz: 20px;
-            --input-fz: 18px;
+            --text: #1a1712; --text2: #3d3932; --text3: #70685e;
+            --border: rgba(44, 40, 32, 0.25); --accent: #7a6143;
+            --max-w: 800px; --base-fz: 20px; --nav-fz: 26px;
+            --msg-fz: 20px; --input-fz: 18px;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -61,169 +38,86 @@
         
         body {
             font-family: 'LXGW WenKai', 'PingFang SC', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.8;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-size: var(--base-fz);
-            /* 解决大字溢出的关键：允许在任何地方换行 */
-            overflow-wrap: anywhere;
-            word-break: break-word;
+            background: var(--bg); color: var(--text); line-height: 1.8;
+            min-height: 100vh; display: flex; flex-direction: column;
+            font-size: var(--base-fz); overflow-wrap: anywhere; word-break: break-word;
         }
 
-        /* 导航优化 */
         .nav {
-            max-width: var(--max-w);
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.2rem;
-            border-bottom: 0.5px solid var(--border);
-            flex-wrap: wrap; /* 空间不足自动换行 */
-            gap: 10px;
+            max-width: var(--max-w); width: 100%; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 1.2rem; border-bottom: 0.5px solid var(--border);
+            flex-wrap: wrap; gap: 10px;
         }
 
         .nav-title {
-            font-family: 'JingHua', serif;
-            font-size: var(--nav-fz);
-            color: var(--text);
-            text-decoration: none;
-            letter-spacing: 0.1em;
+            font-family: 'JingHua', serif; font-size: var(--nav-fz);
+            color: var(--text); text-decoration: none; letter-spacing: 0.1em;
         }
 
         .nav-right { display: flex; align-items: center; gap: 0.8rem; }
 
         .btn-toggle {
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.4rem 0.6rem;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
+            background: var(--bg3); border: 1px solid var(--border);
+            color: var(--text); padding: 0.4rem 0.6rem; border-radius: 6px;
+            font-size: 14px; cursor: pointer;
         }
         body.mode-big .btn-toggle { font-size: 16px; font-weight: bold; background: var(--accent); color: #fff; }
 
         .nav-links a {
-            font-size: calc(var(--base-fz) - 1px);
-            color: var(--text2);
-            text-decoration: none;
-            margin-left: 0.8rem;
+            font-size: calc(var(--base-fz) - 1px); color: var(--text2);
+            text-decoration: none; margin-left: 0.8rem;
         }
         .nav-links a.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-        /* 主体 */
         .main {
-            max-width: var(--max-w);
-            width: 100%;
-            margin: 0 auto;
-            padding: 0 1.2rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            max-width: var(--max-w); width: 100%; margin: 0 auto;
+            padding: 0 1.2rem; flex: 1; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem 0;
-            scroll-behavior: smooth;
-        }
+        .messages { flex: 1; overflow-y: auto; padding: 1.5rem 0; scroll-behavior: smooth; }
 
         .msg { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
         .msg-user { align-items: flex-end; }
         .msg-ai { align-items: flex-start; }
 
         .bubble {
-            padding: 1rem 1.2rem;
-            border-radius: 18px;
-            max-width: 92%; /* 限制宽度防止贴边 */
-            font-size: var(--msg-fz);
-            /* 再次确保气泡内文字不溢出 */
-            overflow-wrap: anywhere;
-            word-break: break-word;
+            padding: 1rem 1.2rem; border-radius: 18px; max-width: 92%;
+            font-size: var(--msg-fz); overflow-wrap: anywhere; word-break: break-word;
         }
 
-        .msg-user .bubble {
-            background: var(--accent);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
+        .msg-user .bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+        .msg-ai .bubble { background: var(--bg2); border: 0.5px solid var(--border); border-bottom-left-radius: 4px; }
 
-        .msg-ai .bubble {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-bottom-left-radius: 4px;
-            line-height: 1.7;
-        }
-
-        /* Markdown 排版优化 */
-        .msg-ai .bubble blockquote {
-            border-left: 4px solid var(--accent);
-            padding: 0.5rem 1rem;
-            margin: 1rem 0;
-            background: var(--bg);
-            font-size: 0.95em;
-        }
+        .msg-ai .bubble blockquote { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--bg); }
         .msg-ai .bubble h3 { margin: 1.2rem 0 0.5rem; font-family: 'JingHua', serif; color: var(--accent); }
-        .msg-ai .bubble img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; }
 
-        /* 输入区修复：解决大字模式挤占空间 */
         .input-area {
-            max-width: var(--max-w);
-            width: 100%;
-            margin: 0 auto;
+            max-width: var(--max-w); width: 100%; margin: 0 auto;
             padding: 1rem 1.2rem calc(1rem + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border);
-            background: var(--bg);
+            border-top: 1px solid var(--border); background: var(--bg);
         }
 
         .input-row { display: flex; gap: 0.6rem; align-items: flex-end; }
         
         textarea {
-            flex: 1;
-            font-family: inherit;
-            font-size: var(--input-fz);
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0.8rem;
-            min-height: 48px;
-            max-height: 150px;
-            outline: none;
-            color: var(--text);
+            flex: 1; font-family: inherit; font-size: var(--input-fz);
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 0.8rem; min-height: 48px; max-height: 150px;
+            outline: none; color: var(--text);
         }
 
         .btn-send {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            height: 48px;
-            padding: 0 1.2rem;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
+            background: var(--accent); color: #fff; border: none;
+            height: 48px; padding: 0 1.2rem; border-radius: 10px;
+            font-weight: bold; cursor: pointer; white-space: nowrap;
         }
 
-        /* 示例问题 */
         .examples { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; padding: 2rem 0; }
         .examples button {
             background: var(--bg2); border: 1px solid var(--border);
             padding: 0.5rem 1rem; border-radius: 20px;
             font-family: inherit; font-size: 14px; cursor: pointer; color: var(--text2);
-        }
-        body.mode-big .examples button { font-size: 16px; padding: 0.6rem 1.2rem; }
-
-        @media (max-width: 480px) {
-            .nav-title { font-size: 20px; }
-            body.mode-big .nav-title { font-size: 22px; }
-            .nav-links a { margin-left: 0.5rem; font-size: 13px; }
         }
     </style>
 </head>
@@ -268,6 +162,15 @@
     <script>
         let markedReady = false;
         const API_URL = "https://api.3333444.xyz";
+        
+        // 等待提示语序列
+        const LOADING_MSGS = [ 
+            "正在查询佛法经典", 
+            "正在匹配大德开示", 
+            "正在比对注疏义理", 
+            "正在准备文本", 
+            "如如不动，稍候片刻", 
+        ];
 
         function toggleMode() {
             const isBig = document.body.classList.toggle('mode-big');
@@ -311,8 +214,15 @@
             inp.style.height = "auto";
             addMsg("user", q);
 
-            const aiDiv = addMsg("ai", "正在查询...");
+            // 初始化等待状态
+            const aiDiv = addMsg("ai", LOADING_MSGS[0]);
             const bubble = aiDiv.querySelector(".bubble");
+            
+            let msgIdx = 1;
+            const loadTimer = setInterval(() => {
+                bubble.innerText = LOADING_MSGS[msgIdx % LOADING_MSGS.length];
+                msgIdx++;
+            }, 1500);
 
             try {
                 const resp = await fetch(API_URL + "/chat", {
@@ -324,12 +234,16 @@
                 const reader = resp.body.getReader();
                 const decoder = new TextDecoder();
                 let full = "";
+                let hasStarted = false;
 
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
+                    
                     const text = decoder.decode(value);
-                    for (const line of text.split("\n")) {
+                    const lines = text.split("\n");
+
+                    for (const line of lines) {
                         if (line.startsWith("data: ")) {
                             const payload = line.slice(6).trim();
                             if (payload === "[DONE]") continue;
@@ -337,9 +251,15 @@
                                 const obj = JSON.parse(payload);
                                 const content = obj.choices?.[0]?.delta?.content;
                                 if (content) {
+                                    // 收到第一条有效内容时，停止滚动加载语
+                                    if (!hasStarted) {
+                                        clearInterval(loadTimer);
+                                        bubble.innerHTML = "";
+                                        hasStarted = true;
+                                    }
                                     full += content;
                                     bubble.innerHTML = renderMarkdown(full);
-                                    box = document.getElementById("messages");
+                                    const box = document.getElementById("messages");
                                     box.scrollTop = box.scrollHeight;
                                 }
                             } catch(e) {}
@@ -347,6 +267,7 @@
                     }
                 }
             } catch (err) {
+                clearInterval(loadTimer);
                 bubble.innerHTML = "连接失败，请检查网络。";
             }
         }
