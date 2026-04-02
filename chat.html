@@ -252,32 +252,77 @@
         .input-area {
             width: 100%; max-width: var(--max-w);
             margin: 0 auto;
-            padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
+            padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
             border-top: 0.5px solid var(--border);
             background: var(--bg);
             flex-shrink: 0;
+            z-index: 100;
         }
         .input-row { display: flex; gap: 0.5rem; align-items: flex-end; }
         textarea {
             flex: 1; min-width: 0;
             font-family: inherit; font-size: var(--input-fz);
             background: var(--bg2); border: 1px solid var(--border);
-            border-radius: 12px; padding: 0.7rem 0.9rem;
-            min-height: 44px; max-height: 180px;
+            border-radius: 12px; padding: 0.5rem 0.8rem;
+            min-height: 40px; max-height: 180px;
             outline: none; color: var(--text);
-            resize: none; line-height: 1.6;
+            resize: none; line-height: 1.5;
             transition: border-color 0.15s;
         }
         textarea:focus { border-color: var(--accent); }
         .btn-send {
             background: var(--accent); color: #fff; border: none;
-            height: 44px; padding: 0 1.1rem; border-radius: 10px;
+            height: 40px; padding: 0 1rem; border-radius: 10px;
             font-weight: bold; cursor: pointer; white-space: nowrap;
             flex-shrink: 0; font-size: 15px; font-family: inherit;
             transition: opacity 0.15s;
         }
         .btn-send:active { opacity: 0.8; }
         .btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ── 余额显示 ── */
+        .quota-status {
+            font-size: 11px; color: var(--text3);
+            text-align: right; margin-top: 4px;
+            padding-right: 4px; opacity: 0.7;
+        }
+
+        /* ── 建议词条样式 ── */
+        .suggestions-bar {
+            display: flex; gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            background: linear-gradient(to top, var(--bg), transparent);
+        }
+        .suggestions-bar::-webkit-scrollbar { display: none; }
+        .suggestions-bar .term-tag {
+            background: var(--bg2); border: 1px solid var(--border);
+            padding: 0.35rem 0.8rem; border-radius: 20px;
+            font-size: 13px; color: var(--text2);
+            cursor: pointer; transition: all 0.2s;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+        .suggestions-bar .term-tag:hover { background: var(--bg3); color: var(--accent); border-color: var(--accent); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RAG 元数据样式 ── */
+        .graph-container {
+            margin: 0.8rem 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg3);
+            position: relative;
+        }
+        .graph-container img {
+            width: 100%; display: block;
+            cursor: zoom-in;
+        }
 
         /* ── 超小屏幕 ── */
         @media (max-width: 380px) {
@@ -312,6 +357,7 @@
             </div>
         </div>
         <div id="messages" class="messages"></div>
+        <div id="suggestions" class="suggestions-bar" style="display:none"></div>
     </div>
 
     <div class="input-area">
@@ -319,6 +365,7 @@
             <textarea id="input" placeholder="输入您的问题…" rows="1"></textarea>
             <button class="btn-send" id="sendBtn" onclick="send()">提问</button>
         </div>
+        <div id="quotaInfo" class="quota-status"></div>
     </div>
 
     <script async src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
@@ -381,6 +428,7 @@
             if (isSending) return;
             const inp = document.getElementById("input");
             const sendBtn = document.getElementById("sendBtn");
+            const quotaInfo = document.getElementById("quotaInfo");
             const q = inp.value.trim();
             if (!q) return;
 
@@ -416,21 +464,58 @@
                     body: JSON.stringify({ query: q }),
                 });
 
+                // 更新剩余次数
+                const remaining = resp.headers.get("X-Remaining");
+                if (remaining !== null) {
+                    quotaInfo.innerText = `今日余愿：${remaining} 次`;
+                }
+
+                if (!resp.ok) {
+                    const errObj = await resp.json().catch(() => ({}));
+                    throw new Error(errObj.error || "提问失败，请稍后重试");
+                }
+
                 const reader  = resp.body.getReader();
                 const decoder = new TextDecoder();
                 let full = "", hasStarted = false;
+                let buffer = "";
 
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
 
-                    const lines = decoder.decode(value).split("\n");
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop(); // 保持最后一行不完整的在 buffer 里
+
                     for (const line of lines) {
-                        if (!line.startsWith("data: ")) continue;
-                        const payload = line.slice(6).trim();
+                        const trimmed = line.trim();
+                        if (!trimmed || trimmed === ": heartbeat") continue;
+                        if (!trimmed.startsWith("data: ")) continue;
+                        
+                        const payload = trimmed.slice(6).trim();
                         if (payload === "[DONE]") continue;
+
                         try {
-                            const obj     = JSON.parse(payload);
+                            const obj = JSON.parse(payload);
+                            
+                            // 1. 处理元数据 (图谱)
+                            if (obj.meta?.graph_url) {
+                                const container = document.createElement("div");
+                                container.className = "graph-container";
+                                container.innerHTML = `<img src="${obj.meta.graph_url}" alt="义理关系图" onclick="window.open(this.src)">`;
+                                bubble.parentNode.insertBefore(container, bubble);
+                                msgBox.scrollTop = msgBox.scrollHeight;
+                                continue;
+                            }
+
+                            // 2. 处理元数据 (建议词)
+                            if (obj.meta?.suggested_terms) {
+                                renderSuggestions(obj.meta.suggested_terms);
+                                continue;
+                            }
+
+                            // 3. 处理流式正文
                             const content = obj.choices?.[0]?.delta?.content;
                             if (content) {
                                 if (!hasStarted) {
@@ -443,7 +528,9 @@
                                 bubble.innerHTML = renderMarkdown(full);
                                 msgBox.scrollTop = msgBox.scrollHeight;
                             }
-                        } catch(e) {}
+                        } catch(e) {
+                            console.error("解析流数据出错:", e);
+                        }
                     }
                 }
                 // 流结束，移除打字光标
@@ -453,16 +540,60 @@
                 clearInterval(dotTimer);
                 clearInterval(msgTimer);
                 bubble.classList.remove("streaming");
-                bubble.innerHTML = "连接失败，请检查网络后重试。";
+                bubble.innerHTML = "连接失败：" + err.message;
             } finally {
                 isSending = false;
                 sendBtn.disabled = false;
             }
         }
 
+        /* ── 渲染建议词 ── */
+        function renderSuggestions(terms) {
+            const container = document.getElementById("suggestions");
+            if (!terms || terms.length === 0) {
+                container.style.display = "none";
+                return;
+            }
+            container.style.display = "flex";
+            container.innerHTML = "";
+            const prefixes = ['什么是', '如何理解', '请详述', '何为'];
+            
+            terms.forEach((term, i) => {
+                const pfx = prefixes[i % prefixes.length];
+                const fullText = `${pfx}「${term}」？`;
+                const span = document.createElement("span");
+                span.className = "term-tag";
+                span.innerText = fullText;
+                span.style.animationDelay = (i * 100) + "ms";
+                span.onclick = () => {
+                    document.getElementById("input").value = fullText;
+                    send();
+                };
+                container.appendChild(span);
+            });
+            // 收到新建议词时，消息区自动滚动一下
+            const msgBox = document.getElementById("messages");
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
         /* ── textarea 自动伸缩 ── */
         const tx = document.getElementById("input");
+
+        // 初始获取余额
+        (async function initQuota() {
+            try {
+                const resp = await fetch(API_URL + "/quota");
+                const data = await resp.json();
+                if (data.remaining !== undefined) {
+                    document.getElementById("quotaInfo").innerText = `今日余愿：${data.remaining} 次`;
+                }
+            } catch(e) {}
+        })();
+        
         tx.addEventListener("input", function () {
+            // 输入文字时隐藏建议词条
+            document.getElementById("suggestions").style.display = this.value.trim() ? "none" : "flex";
+
             this.style.height = "auto";
             this.style.height = Math.min(this.scrollHeight, 180) + "px";
         });
