@@ -41,7 +41,7 @@
 
         html, body {
             height: 100%;
-            overflow: hidden; /* 整页不滚动，只有消息区滚动 */
+            overflow: hidden;
         }
 
         body {
@@ -142,12 +142,10 @@
         .bubble {
             padding: 0.85rem 1rem;
             border-radius: 18px;
-            /* 关键：最大宽度限制 + 内容不溢出 */
             max-width: min(88%, 560px);
             min-width: 0;
             font-size: var(--msg-fz);
             position: relative;
-            /* 所有文字内容强制换行 */
             overflow-wrap: break-word;
             word-break: break-word;
             overflow: hidden;
@@ -162,15 +160,14 @@
             width: auto; max-width: min(92%, 600px);
         }
 
-        /* ── Markdown 内容修复（核心）── */
+        /* ── Markdown 内容修复 ── */
         .bubble p { margin: 0.4em 0; }
         .bubble p:first-child { margin-top: 0; }
         .bubble p:last-child  { margin-bottom: 0; }
 
-        /* 有序/无序列表：左缩进留够，防止数字序号被裁掉 */
         .bubble ol,
         .bubble ul {
-            padding-left: 1.6em;   /* 给序号/符号留空间 */
+            padding-left: 1.6em;
             margin: 0.5em 0;
             list-style-position: outside;
         }
@@ -178,23 +175,20 @@
             margin: 0.25em 0;
             overflow-wrap: break-word;
             word-break: break-word;
-            /* 防止列表项内长单词撑破气泡 */
             min-width: 0;
         }
-        /* 嵌套列表 */
         .bubble ol ol, .bubble ul ul,
         .bubble ol ul, .bubble ul ol {
             padding-left: 1.2em;
             margin: 0.2em 0;
         }
 
-        /* 代码块 */
         .bubble pre {
             background: var(--bg3);
             border-radius: 8px;
             padding: 0.8em;
             margin: 0.6em 0;
-            overflow-x: auto;  /* 代码横向可滚动 */
+            overflow-x: auto;
             font-size: 0.85em;
         }
         .bubble code {
@@ -207,7 +201,6 @@
             border-radius: 4px;
         }
 
-        /* 引用 */
         .bubble blockquote {
             border-left: 3px solid var(--accent);
             padding: 0.4rem 0.8rem;
@@ -218,14 +211,12 @@
             font-style: italic;
         }
 
-        /* 分割线 */
         .bubble hr {
             border: none;
             border-top: 0.5px solid var(--border);
             margin: 0.8em 0;
         }
 
-        /* 标题 */
         .bubble h1, .bubble h2, .bubble h3 {
             font-family: 'JingHua', serif;
             font-weight: normal;
@@ -235,10 +226,8 @@
         .bubble h2 { font-size: 1.1em; }
         .bubble h3 { font-size: 1em; color: var(--text2); }
 
-        /* 加粗 */
         .bubble strong { color: var(--accent); font-weight: 600; }
 
-        /* 打字光标动画 */
         .bubble.streaming::after {
             content: "▋";
             display: inline-block;
@@ -247,6 +236,21 @@
             margin-left: 2px;
         }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ── 话题标签样式 ── */
+        .topic-tags {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            margin-top: 10px; padding-top: 8px;
+            border-top: 0.5px solid var(--border);
+        }
+        .topic-tags .topic-tag {
+            display: inline-block;
+            padding: 2px 10px; border-radius: 6px;
+            font-size: 12px; letter-spacing: 0.05em;
+            background: var(--bg3); border: 1px solid var(--border);
+            color: var(--accent); cursor: default;
+            animation: slideUp 0.4s ease-out forwards;
+        }
 
         /* ── 输入区 ── */
         .input-area {
@@ -394,7 +398,7 @@
             document.getElementById('modeBtn').textContent = saved ? "标准字" : "大字版";
         })();
 
-        /* ── Markdown 渲染（sanitize 关闭，已信任内容）── */
+        /* ── Markdown 渲染 ── */
         function renderMarkdown(text) {
             if (markedReady && typeof marked !== "undefined") {
                 return marked.parse(text);
@@ -439,7 +443,6 @@
 
             addMsg("user", q.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 
-            // 加载动画气泡
             const bubble = addMsg("ai", "", true);
             let msgIdx = 0, dotCount = 0;
             bubble.innerText = LOADING_MSGS[0] + "…";
@@ -464,7 +467,6 @@
                     body: JSON.stringify({ query: q }),
                 });
 
-                // 更新剩余次数
                 const remaining = resp.headers.get("X-Remaining");
                 if (remaining !== null) {
                     quotaInfo.innerText = `今日余愿：${remaining} 次`;
@@ -486,19 +488,19 @@
 
                     buffer += decoder.decode(value, { stream: true });
                     const lines = buffer.split("\n");
-                    buffer = lines.pop(); // 保持最后一行不完整的在 buffer 里
+                    buffer = lines.pop();
 
                     for (const line of lines) {
                         const trimmed = line.trim();
                         if (!trimmed || trimmed === ": heartbeat") continue;
                         if (!trimmed.startsWith("data: ")) continue;
-                        
+
                         const payload = trimmed.slice(6).trim();
                         if (payload === "[DONE]") continue;
 
                         try {
                             const obj = JSON.parse(payload);
-                            
+
                             // 1. 处理元数据 (图谱)
                             if (obj.meta?.graph_url) {
                                 const container = document.createElement("div");
@@ -509,9 +511,14 @@
                                 continue;
                             }
 
-                            // 2. 处理元数据 (建议词)
-                            if (obj.meta?.suggested_terms) {
-                                renderSuggestions(obj.meta.suggested_terms);
+                            // 2. 处理元数据 (建议词 + 话题标签，同一帧里一起处理)
+                            if (obj.meta) {
+                                if (obj.meta.suggested_terms) {
+                                    renderSuggestions(obj.meta.suggested_terms);
+                                }
+                                if (obj.meta.topics) {
+                                    renderTopics(obj.meta.topics, bubble);
+                                }
                                 continue;
                             }
 
@@ -533,7 +540,6 @@
                         }
                     }
                 }
-                // 流结束，移除打字光标
                 bubble.classList.remove("streaming");
 
             } catch (err) {
@@ -557,7 +563,7 @@
             container.style.display = "flex";
             container.innerHTML = "";
             const prefixes = ['什么是', '如何理解', '请详述', '何为'];
-            
+
             terms.forEach((term, i) => {
                 const pfx = prefixes[i % prefixes.length];
                 const fullText = `${pfx}「${term}」？`;
@@ -571,7 +577,24 @@
                 };
                 container.appendChild(span);
             });
-            // 收到新建议词时，消息区自动滚动一下
+            const msgBox = document.getElementById("messages");
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        /* ── 渲染话题标签 ── */
+        function renderTopics(topics, bubble) {
+            if (!topics || topics.length === 0) return;
+            if (bubble.querySelector('.topic-tags')) return; // 防止重复添加
+            const bar = document.createElement('div');
+            bar.className = 'topic-tags';
+            topics.forEach((tag, i) => {
+                const span = document.createElement('span');
+                span.className = 'topic-tag';
+                span.style.animationDelay = (i * 80) + "ms";
+                span.textContent = '# ' + tag;
+                bar.appendChild(span);
+            });
+            bubble.appendChild(bar);
             const msgBox = document.getElementById("messages");
             msgBox.scrollTop = msgBox.scrollHeight;
         }
@@ -589,11 +612,9 @@
                 }
             } catch(e) {}
         })();
-        
-        tx.addEventListener("input", function () {
-            // 输入文字时隐藏建议词条
-            document.getElementById("suggestions").style.display = this.value.trim() ? "none" : "flex";
 
+        tx.addEventListener("input", function () {
+            document.getElementById("suggestions").style.display = this.value.trim() ? "none" : "flex";
             this.style.height = "auto";
             this.style.height = Math.min(this.scrollHeight, 180) + "px";
         });
