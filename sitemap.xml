@@ -7,6 +7,12 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://blog.3333444.xyz/posts/2026-06-01-%E6%97%A0%E5%BF%83%E6%89%AB%E5%9C%B0-%E5%9C%B0%E8%87%AA%E5%87%80.html</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://blog.3333444.xyz/posts/2026-06-01-%E9%82%A3%E4%B8%AA%E4%BF%AE%E5%BF%83%E7%9A%84-%E5%B0%B1%E6%98%AF%E5%A6%84%E5%BF%83.html</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -602,12 +608,6 @@
   </url>
   <url>
     <loc>https://blog.3333444.xyz/posts/2026-05-13-%E7%A6%BB%E5%B0%98%E6%97%A0%E4%BD%93-%E5%A6%84%E4%BD%95%E4%B8%BA%E4%B8%BB.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://blog.3333444.xyz/posts/2026-05-13-%E5%AE%88%E6%8C%87%E5%BF%98%E6%9C%88-%E8%BF%9E%E6%8C%87%E4%B9%9F%E4%B8%A2%E4%BA%86.html</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
