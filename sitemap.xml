@@ -2,9 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://blog.3333444.xyz/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://blog.3333444.xyz/posts/2026-10-28-%E7%82%BA%E4%BB%80%E9%BA%BC%E5%81%8F%E5%81%8F%E6%98%AF%E9%98%BF%E5%BD%8C%E9%99%80%E4%BD%9B-%E6%B7%A8%E5%9C%9F%E5%8D%81%E7%96%91%E8%AB%96-%E7%AC%AC%E5%9B%9B%E7%96%91.html</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://blog.3333444.xyz/posts/2026-10-26-%E6%98%AF%E7%9C%BC%E7%9D%9B%E5%9C%A8%E7%9C%8B-%E9%82%84%E6%98%AF%E5%BF%83%E5%9C%A8%E7%9C%8B-%E6%A5%9E%E5%9A%B4%E7%B6%93%E8%A9%B3%E8%A7%A3-%E7%AC%AC6%E8%AC%9B.html</loc>
